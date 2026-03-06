@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: pension_postgres
+    environment:
+      POSTGRES_DB: pension_db
+      POSTGRES_USER: pension_user
+      POSTGRES_PASSWORD: pension_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U pension_user -d pension_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  activemq:
+    image: apache/activemq-classic:5.18
+    container_name: pension_activemq
+    environment:
+      ACTIVEMQ_ADMIN_LOGIN: admin
+      ACTIVEMQ_ADMIN_PASSWORD: admin
+    ports:
+      - "61616:61616"   # OpenWire
+      - "8161:8161"     # Web console
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8161/"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
