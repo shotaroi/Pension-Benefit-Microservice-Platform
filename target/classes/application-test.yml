@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    # Overridden by TestContainersConfig when @Import(TestContainersConfig.class)
+    url: jdbc:postgresql://localhost:5432/pension_test
+    username: test
+    password: test
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+
+  flyway:
+    enabled: true
+
+  jms:
+    listener:
+      auto-startup: false  # Disable when using StubJmsConfig
